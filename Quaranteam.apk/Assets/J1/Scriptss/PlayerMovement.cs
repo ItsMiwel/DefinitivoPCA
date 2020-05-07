@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private bool isDragged = false;
-    private int iterator = 0;
+    //Variables
+    private bool itsGrabbed = false;
+    private bool itsDragged = false;
+    private bool itsThrown = false;
+    //private bool wasNotThrown = true;
     public Rigidbody2D playerRigidBody2D;
-    public Rigidbody2D hook;
-    public SpringJoint2D spring;
+    public Rigidbody2D hookRigidBody2D;
+    public SpringJoint2D elasticCord;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,45 +23,65 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isDragged)
+        if (itsGrabbed)
         {
-            playerRigidBody2D.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            playerRigidBody2D.position = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Con esto la pelota sigue el movimiento del mouse.
         }
 
-        if (iterator == 1)
+        //if (wasNotThrown) //En caso de necesitar controlar que se tire la pelota solo una vez. Por defecto solo se puede tirar una vez.
+        if (passedOriginPoint())
         {
-            if (returnsToDefault())
-            {
-                spring.enabled = false;
-                iterator = 0;
-            }
+            elasticCord.enabled = false;
         }
-        
-        
     }
 
     private void OnMouseDown()
     {
-        isDragged = true;
+        itsGrabbed = true;
         playerRigidBody2D.isKinematic = true;
-        iterator = 1;
+        
+        if (!itsThrown)
+        {
+            itsDragged = true;
+        }
     }
 
     private void OnMouseUp()
-    {   
-        isDragged = false;
+    {
+        itsGrabbed = false;
         playerRigidBody2D.isKinematic = false;
+
+        if (itsDragged)
+        {
+            itsThrown = true;
+        }
     }
 
-    private bool returnsToDefault()
+    private bool passedOriginPoint()
     {
-        if(playerRigidBody2D.position.x > hook.position.x)
+        if (itsThrown)
         {
-            Debug.Log("Player: " + playerRigidBody2D.position.x);
-            Debug.Log("Hook: " + hook.position.x);
-            return true;
+            double playersPosition = playerRigidBody2D.position.x;
+            double positiveRange = hookRigidBody2D.position.x + 0.5;
+            double negativeRange = hookRigidBody2D.position.x - 0.5;
+            if (playersPosition > negativeRange && playersPosition < positiveRange)
+            {
+                //wasNotThrown = false;
+                return true;
+            }
+            return false;
         }
         return false;
     }
+
+
+
+
+    //PRINTS PARA REVISAR VALORES:
+    //
+    //Dentro de la funcion passedOrigin():       //Debug.Log("Player: " + posicionPlayer); Debug.Log("Hook range: (" + rangoPositivo + ", " + rangoNegativo + ")");
+
+
+
 
 }

@@ -63,7 +63,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\J1\Scriptss\Enemy.cs" />
+    <Compile Include="Assets\J1\Scriptss\LevelLoader.cs" />
     <Compile Include="Assets\J1\Scriptss\PlayerMovement.cs" />
+    <Compile Include="Assets\J1\Scriptss\Score.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Aukan/Documents/GitHub/DefinitivoPCA/Quaranteam.apk/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
